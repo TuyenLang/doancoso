@@ -1,29 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:money_lover/common/color_extension.dart';
-import 'package:money_lover/home/home_view.dart';
-import 'package:money_lover/main_pages/pendding/pendding.dart';
-class Transaction {
-  final String title;
-  final double amount;
-  final DateTime date;
+import 'package:money_lover/main_pages/pendding/transaction_model.dart';
 
-  Transaction({required this.title, required this.amount, required this.date});
-}
 
 
 class TransactionList extends StatefulWidget {
+  const TransactionList({super.key});
+  
   @override
   _TransactionListState createState() => _TransactionListState();
 }
 
 class _TransactionListState extends State<TransactionList> {
-  final List<Transaction> _transactions = [];
+    final List<Transaction> _transactions = [
+    Transaction(title: 'Giao dịch 1', amount: 50.0, date: DateTime.now()),
+    Transaction(title: 'Giao dịch 2', amount: 75.0, date: DateTime.now().subtract(Duration(days: 1))),
+    // Thêm các giao dịch khác nếu cần
+  ];
+  
   double? _devHeight, _devWidth;
-  void _addTransaction(Transaction transaction) {
-    setState(() {
-      _transactions.add(transaction);
-    });
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -44,20 +40,8 @@ class _TransactionListState extends State<TransactionList> {
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: _transactions.length,
-              itemBuilder: (context, index) {
-                final transaction = _transactions[index];
-                return ListTile(
-                  title: Text(transaction.title),
-                  subtitle: Text(
-                    'Số tiền: ${transaction.amount}, Ngày: ${transaction.date.toLocal()}'.split(' ')[0],
-                  ),
-                );
-              },
-            ),
-          ),
+
+            _transactionList(),
           // ElevatedButton(
           //   onPressed: () async {
           //     final result = await Navigator.push(
@@ -80,4 +64,25 @@ class _TransactionListState extends State<TransactionList> {
       ),
     );
   }
+  Widget _transactionList() {
+    return Expanded(
+      child: ListView.builder(
+        itemCount: _transactions.length,
+        itemBuilder: (context, index) {
+          final transaction = _transactions[index];
+          return ListTile(
+            title: Text(transaction.title),
+            subtitle: Text(
+              'Số tiền: ${transaction.amount.toStringAsFixed(2)}',
+            ),
+            onTap: () {
+              // Xử lý sự kiện nhấn vào đây
+              print('Nhấn vào giao dịch: ${transaction.title}');
+            },
+          );
+        },
+      ),
+    );
+  }
+
 }
